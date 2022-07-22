@@ -1,29 +1,33 @@
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+// testfeatures
 import { getProducts } from "../lib/products";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
+import {
+  dehydrate,
+  QueryClient,
+  useQuery,
+  QueryClientProvider,
+} from "react-query";
 const queryClient = new QueryClient();
 export async function getStaticProps() {
   const products = await getProducts();
-  return {
-    props: { products },
-  };
+
+  return { props: { products } };
 }
-export default function App() {
+
+export default function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Example />
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Example />
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </>
   );
 }
 
 function Example(props) {
-  const { isLoading, error, data } = useQuery("product-list", getProducts, {
-    initialData: [props.products],
+  const { isLoading, error, data } = useQuery("products-list", getProducts, {
+    initialData: props.products,
   });
 
   if (isLoading) return "Loading...";
@@ -32,9 +36,7 @@ function Example(props) {
 
   return (
     <div>
-      {data.results.map((i) => (
-        <div key={i.id}>{i.title}</div>
-      ))}
+      {data.results && data.results.map((i) => <div key={i.id}>{i.title}</div>)}
     </div>
   );
 }

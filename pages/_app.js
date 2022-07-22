@@ -1,7 +1,12 @@
 import "../styles/globals.css";
+import { useState } from "react";
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import Layout from "@/components/layouts";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
 }
-
-export default MyApp;
