@@ -1,4 +1,7 @@
-@import "https://unpkg.com/open-props";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 html,
 body {
   padding: 0;
@@ -14,12 +17,4 @@ a {
 
 * {
   box-sizing: border-box;
-}
-
-input.submit-button{
-  color: var(--yellow-0);
-  background-color: var(--green-6);
-  padding: var(--size-2);
-  padding-inline: var(--size-4);
-  border:none
 }
