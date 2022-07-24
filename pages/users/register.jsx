@@ -66,7 +66,7 @@ export default function Register() {
             <input
               type="submit"
               value="sign up"
-              className="submit-button h-12 px-28 m-2 bg-green-400 text-gray-50 text-xl font-bold"
+              className="submit-button h-12 px-24 m-2 bg-green-400 text-gray-50 text-xl font-bold"
             />
           </p>
         </form>
