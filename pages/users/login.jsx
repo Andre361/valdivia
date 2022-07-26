@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { BASE_URL } from "constants";
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
+  const [token, setToken] = useState({ access: "", refresh: "" });
   const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:8000/auth/jwt/create", form)
+      .post(`${BASE_URL}/auth/jwt/create`, form)
       .then((res) => console.log(res))
-      // .then((res) => (res.status == 200 ? router.push("/") : {}))
+      .then(() => router.push("/"))
       .catch((err) => {
         if (err.response) {
           console.log(err.response);

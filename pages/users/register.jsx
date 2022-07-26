@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { BASE_URL } from "constants";
+
 export default function Register() {
   const [form, setForm] = useState({
     username: "",
@@ -11,7 +13,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:8000/auth/users/", form, {
+      .post(`${BASE_URL}/auth/users/`, form, {
         withCredentials: true,
       })
       .then((res) => (res.status == 201 ? router.push("/users/login/") : {}))

@@ -1,7 +1,8 @@
 import axios from "axios";
+import { BASE_URL } from "../constants";
 
 export async function getStaticProps() {
-  const res = await axios.get("http://localhost:8000/store/products/");
+  const res = await axios.get(`${BASE_URL}/store/products/`);
   const products = await res.data;
   return { props: { products } };
 }
