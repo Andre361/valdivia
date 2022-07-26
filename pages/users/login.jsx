@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { setCookie } from "nookies";
 import { BASE_URL } from "constants";
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
-  const [token, setToken] = useState({ access: "", refresh: "" });
+  const nookieOptions = { maxAge: 24 * 60 * 60 };
   const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
       .post(`${BASE_URL}/auth/jwt/create`, form)
-      .then((res) => console.log(res))
+      .then(
+        (res) => (
+          setCookie(null, "access", res.data.access, nookieOptions),
+          setCookie(null, "refresh", res.data.refresh, nookieOptions)
+        )
+      )
       .then(() => router.push("/"))
       .catch((err) => {
         if (err.response) {
