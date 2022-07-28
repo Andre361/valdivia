@@ -114,7 +114,12 @@
     flex-direction: column;
   }
 }
-button.submit{
-color: var(--green-3);
-padding: var(--size-2);
+
+.hero{
+  background-image: url('../public/cool-background.png');
 }
+/* .hero::after{
+  display: block;
+  background-color: rgba(210, 238, 231, 0.493);
+  transform: rotateX(25deg);
+} */
