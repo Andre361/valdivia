@@ -14,7 +14,7 @@ export default function LandingPage({ products }) {
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";
   return (
     <div className="">
-      <section className="hero p-8 bg-gradient-to-r from-cyan-400 to green-700">
+      <section className="hero p-8 bg-hero-pattern">
         <h1 className="text-5xl text-gray-100 p-12">Welcome to the shop</h1>
       </section>
       <section className="featured-products m-4">
@@ -23,7 +23,10 @@ export default function LandingPage({ products }) {
         </div>
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {products.map((product) => (
-            <div className="product-card w-full " key={product.id}>
+            <div
+              className="product-card w-full border-solid border-gray-200 border-2"
+              key={product.id}
+            >
               <div className="bg-main active:bg-brand w-full aspect-1">
                 <div className="bg-white w-full h-full relative hover:translate-y-[-10px] hover:translate-x-[-10px] transition-transform object-contain ">
                   <Image
