@@ -1,14 +1,11 @@
 import Link from "./Link";
 import Image from "next/image";
 import { currencyFormat } from "lib";
-export default function ProductCard({ product, key }) {
+export default function ProductCard({ product }) {
   const placeholderImage =
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";
   return (
-    <div
-      className="product-card border-solid border-gray-200 border-2 bg-red-100 basis-1/5"
-      key={key}
-    >
+    <div className="product-card border-solid border-gray-200 border-2 bg-red-100 basis-1/5">
       <div className="bg-main active:bg-brand w-full aspect-1">
         <div className="bg-white relative hover:translate-y-[-10px] hover:translate-x-[-10px] transition-transform object-contain ">
           <Image
