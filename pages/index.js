@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "@/components/Link";
 import { parseCookies } from "nookies";
 import axios from "axios";
-import { BASE_URL } from "constants";
+import { BASE_URL } from "../constants";
 import { fetchProducts, currencyFormat } from "../lib/";
 
 export async function getStaticProps() {
@@ -14,7 +14,7 @@ export async function getStaticProps() {
 }
 
 export default function LandingPage({ products }) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const cookies = parseCookies();
   let config = {
     headers: {
@@ -26,7 +26,7 @@ export default function LandingPage({ products }) {
     client(`${BASE_URL}/auth/users/me/`).then((response) =>
       setUser(response.data)
     );
-  });
+  }, [setUser]);
   const placeholderImage =
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";
   return (
