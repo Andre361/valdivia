@@ -37,7 +37,7 @@ export default function Products() {
   if (error) return <p>{error.message}</p>;
   return (
     <>
-      <div className="product-list bg-blue-200 flex flex-wrap justify-center p-2">
+      <div className="product-list bg-blue-200 flex flex-wrap justify-center p-2  ">
         {isLoading
           ? "Loading..."
           : data?.map((product) => (
