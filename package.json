@@ -14,7 +14,8 @@
     "nookies": "^2.5.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-query": "^3.39.2"
+    "react-query": "^3.39.2",
+    "react-toastify": "^9.0.7"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
