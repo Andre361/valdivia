@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import { fetchProducts, fetchProductsPerPage } from "lib";
-
+// TODO: use next link to fetch data additional Data onCLick
 export default function Products() {
   const [data, setData] = useState([]);
   const [isLoading, SetisLoading] = useState(false);

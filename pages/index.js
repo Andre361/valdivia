@@ -1,5 +1,9 @@
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "@/components/Link";
+import { parseCookies } from "nookies";
+import axios from "axios";
+import { BASE_URL } from "constants";
 import { fetchProducts, currencyFormat } from "../lib/";
 
 export async function getStaticProps() {
@@ -10,12 +14,27 @@ export async function getStaticProps() {
 }
 
 export default function LandingPage({ products }) {
+  const [user, setUser] = useState({});
+  const cookies = parseCookies();
+  let config = {
+    headers: {
+      Authorization: `JWT ${cookies.access}`,
+    },
+  };
+  const client = axios.create(config);
+  useEffect(() => {
+    client(`${BASE_URL}/auth/users/me/`).then((response) =>
+      setUser(response.data)
+    );
+  });
   const placeholderImage =
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";
   return (
     <div className="">
       <section className="hero p-8 bg-hero-pattern">
-        <h1 className="text-5xl text-gray-100 p-12">Welcome to the shop</h1>
+        <h1 className="text-5xl text-gray-100 p-12">
+          Welcome to the shop, {user?.username}.
+        </h1>
       </section>
       <section className="featured-products m-4">
         <div className="flex justify-center">
