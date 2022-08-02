@@ -33,7 +33,7 @@ export default function LandingPage({ products }) {
     <div className="">
       <section className="hero p-8 bg-hero-pattern">
         <h1 className="text-5xl text-gray-100 p-12">
-          Welcome to the shop, {user?.username}.
+          Welcome to the shop, {user?.username}
         </h1>
       </section>
       <section className="featured-products m-4">
