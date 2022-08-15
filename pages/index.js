@@ -15,17 +15,32 @@ export async function getStaticProps() {
 
 export default function LandingPage({ products }) {
   const [user, setUser] = useState(null);
-  const cookies = parseCookies();
-  let config = {
-    headers: {
-      Authorization: `JWT ${cookies.access}`,
-    },
-  };
-  const client = axios.create(config);
+  const [error, setError] = useState(null);
   useEffect(() => {
-    client(`${BASE_URL}/auth/users/me/`).then((response) =>
-      setUser(response.data)
+    const cookies = parseCookies();
+    let config = {
+      headers: {
+        Authorization: `JWT ${cookies.access}`,
+      },
+    };
+    const client = axios.create(config);
+    client.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response.status === 401 && cookies.refresh) {
+          const response = await client(`${BASE_URL}/auth/auth/jwt/refresh/`);
+          if (response.status === 200) {
+            return client(error.config);
+          } else {
+            return Promise.reject(error);
+          }
+        }
+        return error;
+      }
     );
+    client(`${BASE_URL}/auth/users/me/`)
+      .then((response) => setUser(response.data))
+      .catch((err) => console.log(err));
   }, [setUser]);
   const placeholderImage =
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";

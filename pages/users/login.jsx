@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { setCookie } from "nookies";
 import { BASE_URL } from "constants";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const nookieOptions = { maxAge: 24 * 60 * 60 };
@@ -18,18 +20,13 @@ export default function Login() {
         )
       )
       .then(() => router.push("/"))
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response);
-        } else if (err.request) {
-          console.log(err.request);
-        }
-      });
+      .catch((err) => toast.error("Invalid login credentials"));
   };
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   return (
     <div className="login-form min-h-full flex items-center justify-center  py-12 px-4 ">
+      <ToastContainer />
       <div>
         <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900">
           Sign in to your account
