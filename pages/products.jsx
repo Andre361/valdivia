@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { ProductCard } from "@/components/ProductCard";
-import { fetchProductsPerPage } from "lib";
+import { useReducer, useEffect } from "react";
+import { fetchProductDetails } from "lib";
+import ProductGrid from "@/components/ProductCardList";
+
 // TODO: use next link to fetch data additional Data onCLick
 const productsReducer = (state, action) => {
   switch (action.type) {
@@ -8,14 +9,18 @@ const productsReducer = (state, action) => {
       return {
         ...state,
         isLoading: true,
-        isError: true,
+        isError: false,
       };
     case "PRODUCTS_FETCH_SUCCESS":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload,
+        nextPage: action.payload.next,
+        data:
+          action.payload.next === ""
+            ? action.payload.list
+            : state.data.concat(action.payload.list),
       };
     case "PRODUCTS_FETCH_FAILURE":
       return {
@@ -26,50 +31,83 @@ const productsReducer = (state, action) => {
   }
 };
 export default function Products() {
-  const [data, setData] = useState([]);
-  const [isLoading, SetisLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentPage, setcurrentPage] = useState(1);
-  const updatePage = () => setcurrentPage((prev) => prev + 1);
-  // async () => {
-  //   const products = await fetchNewProducts(currentPage);
-  //   return setData((prevData) => [...prevData, ...products]);
-  // }
-
-  // useEffect(() => {
-  //   SetisLoading(true);
-  //   fetchProducts()
-  //     .then((response) => {
-  //       setData(response);
-  //       SetisLoading(false);
-  //     })
-  //     .catch((error) => setError(error));
-  // }, []);
-
-  // const fetchNewProducts = (page) =>
-  //   fetchProductsPerPage(page).then((response) => response.results);
+  const [products, dispatchProducts] = useReducer(productsReducer, {
+    nextPage: "",
+    data: [],
+    isLoading: false,
+    isError: false,
+  });
   useEffect(() => {
-    (async () => {
-      const response = await fetchProductsPerPage(currentPage);
-      const products = response.results;
-      setData((prev) => [...prev, ...products]);
-    })();
-  }, [currentPage]);
+    dispatchProducts({ type: "PRODUCTS_FETCH_INIT" });
 
-  if (!data) return "data is absent";
-  if (error) return <p>{error.message}</p>;
+    fetchProductDetails()
+      .then((result) =>
+        dispatchProducts({
+          type: "PRODUCTS_FETCH_SUCCESS",
+          payload: { list: result.results, next: result.next },
+        })
+      )
+      .catch(() => dispatchProducts("PRODUCTS_FETCH_FALURE"));
+  }, []);
+
+  const handleMore = () => {
+    const url = products.nextPage;
+    dispatchProducts({ type: "PRODUCTS_FETCH_INIT" });
+    fetchProductDetails(url)
+      .then((result) =>
+        dispatchProducts({
+          type: "PRODUCTS_FETCH_SUCCESS",
+          payload: { list: result.results, next: result.next },
+        })
+      )
+      .catch(() => dispatchProducts("PRODUCTS_FETCH_FALURE"));
+  };
   return (
-    <>
-      <div className="product-list bg-blue-200 flex flex-wrap justify-center p-2  ">
-        {isLoading
-          ? "Loading..."
-          : data?.map((product) => (
-              <ProductCard product={product} key={product.id} />
-            ))}
-        <button className="bg-gray-100 p-4 m-2" onClick={updatePage}>
-          More Products
-        </button>
+    <div>
+      {products?.isError && <p>Something went wrong ...</p>}
+
+      <div className="bg-white">
+        <ProductGrid products={products} />
+
+        <span className="mb-4 flex justify-center">
+          <button
+            className="text-white  bg-blue-700 focus:ring-4 focus:outline-none font-lg rounded-lg px-5 py-2.5 text-center"
+            onClick={handleMore}
+          >
+            {products.isLoading ? <Loader /> : "More"}
+          </button>
+        </span>
       </div>
-    </>
+    </div>
+  );
+}
+
+function Loader() {
+  return (
+    <span>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 38 38"
+        xmlns="http://www.w3.org/2000/svg"
+        stroke="#fff"
+      >
+        <g fill="none" fillRule="evenodd">
+          <g transform="translate(1 1)" strokeWidth="2">
+            <circle strokeOpacity=".5" cx="18" cy="18" r="18" />
+            <path d="M36 18c0-9.94-8.06-18-18-18">
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 18 18"
+                to="360 18 18"
+                dur="1s"
+                repeatCount="indefinite"
+              />
+            </path>
+          </g>
+        </g>
+      </svg>
+    </span>
   );
 }
