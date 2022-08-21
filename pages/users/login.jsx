@@ -53,7 +53,7 @@ export default function Login() {
             />
           </p>
           <input
-            className="submit-button h-12 px-24 m-2 bg-green-400 text-gray-50 text-xl font-bold"
+            className="submit-button h-12 w-full bg-green-400 text-gray-50 text-xl font-bold"
             type="submit"
             value="log in"
           />

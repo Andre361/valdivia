@@ -15,7 +15,9 @@ export default function Register() {
     e.preventDefault();
     await axios
       .post(`${BASE_URL}/auth/users/`, form)
-      .then((res) => res.status == 201 && router.push("/users/login/"))
+      .then((res) => {
+        res.status == 201 && router.push("/users/login/");
+      })
       .catch((err) => setError(err));
   };
   const handleChange = (e) =>
@@ -73,7 +75,7 @@ export default function Register() {
               <input
                 type="submit"
                 value="sign up"
-                className="submit-button h-12 px-24 m-2 bg-green-400 text-gray-50 text-xl font-bold"
+                className="submit-button h-12 w-full bg-green-400 text-gray-50 text-xl font-bold"
               />
             </p>
           </form>

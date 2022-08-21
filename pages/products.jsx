@@ -1,7 +1,30 @@
 import { useState, useEffect } from "react";
-import ProductCard from "@/components/ProductCard";
+import { ProductCard } from "@/components/ProductCard";
 import { fetchProductsPerPage } from "lib";
 // TODO: use next link to fetch data additional Data onCLick
+const productsReducer = (state, action) => {
+  switch (action.type) {
+    case "PRODUCTS_FETCH_INIT":
+      return {
+        ...state,
+        isLoading: true,
+        isError: true,
+      };
+    case "PRODUCTS_FETCH_SUCCESS":
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload,
+      };
+    case "PRODUCTS_FETCH_FAILURE":
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+  }
+};
 export default function Products() {
   const [data, setData] = useState([]);
   const [isLoading, SetisLoading] = useState(false);
