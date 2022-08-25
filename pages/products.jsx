@@ -74,7 +74,7 @@ export default function Products() {
             className="text-white  bg-blue-700 focus:ring-4 focus:outline-none font-lg rounded-lg px-5 py-2.5 text-center"
             onClick={handleMore}
           >
-            {products.isLoading ? <Loader /> : "More"}
+            {products?.isLoading ? <Loader /> : "More"}
           </button>
         </span>
       </div>

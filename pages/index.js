@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "@/components/Link";
+import shallow from "zustand/shallow";
+import useAuthStore from "store/user";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 import { fetchProducts, currencyFormat } from "../lib/";
-
+import client from "lib/axiosWrapper";
 export async function getStaticProps() {
   const products = await fetchProducts();
   return {
@@ -14,30 +16,13 @@ export async function getStaticProps() {
 }
 
 export default function LandingPage({ products }) {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  // const [user, setUser] = useState(null);
+
+  const [user, setUser] = useAuthStore(
+    (state) => [state.user, state.setUser],
+    shallow
+  );
   useEffect(() => {
-    const cookies = parseCookies();
-    let config = {
-      headers: {
-        Authorization: `JWT ${cookies.access}`,
-      },
-    };
-    const client = axios.create(config);
-    client.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response.status === 401 && cookies.refresh) {
-          const response = await client(`${BASE_URL}/auth/auth/jwt/refresh/`);
-          if (response.status === 200) {
-            return client(error.config);
-          } else {
-            return Promise.reject(error);
-          }
-        }
-        return error;
-      }
-    );
     client(`${BASE_URL}/auth/users/me/`)
       .then((response) => setUser(response.data))
       .catch((err) => console.log(err));

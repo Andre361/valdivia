@@ -14,7 +14,8 @@
     "nookies": "^2.5.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-toastify": "^9.0.7"
+    "react-toastify": "^9.0.7",
+    "zustand": "^4.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
