@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "@/components/Link";
 import shallow from "zustand/shallow";
 import useAuthStore from "store/user";
-import { parseCookies } from "nookies";
-import axios from "axios";
 import { BASE_URL } from "../constants";
 import { fetchProducts, currencyFormat } from "../lib/";
 import client from "lib/axiosWrapper";
@@ -16,24 +14,26 @@ export async function getStaticProps() {
 }
 
 export default function LandingPage({ products }) {
-  // const [user, setUser] = useState(null);
-
-  const [user, setUser] = useAuthStore(
-    (state) => [state.user, state.setUser],
+  const [userData, token, setUserData] = useAuthStore(
+    (state) => [state.userData, state.token, state.setUserData],
     shallow
   );
   useEffect(() => {
-    client(`${BASE_URL}/auth/users/me/`)
-      .then((response) => setUser(response.data))
-      .catch((err) => console.log(err));
-  }, [setUser]);
+    if (token) {
+      client(`${BASE_URL}/auth/users/me/`, {
+        headers: { Authorization: `JWT ${token}` },
+      })
+        .then((response) => setUserData(response.data))
+        .catch((err) => console.log(err));
+    }
+  }, [token, setUserData]);
   const placeholderImage =
     "https://res.cloudinary.com/dsuqfsnp2/image/upload/v1658883630/cld-sample-4.jpg";
   return (
-    <div className="">
+    <div>
       <section className="hero p-8 bg-hero-pattern">
         <h1 className="text-5xl text-gray-100 p-12">
-          Welcome to the shop, {user?.username}
+          Welcome to the shop {userData && userData.username}
         </h1>
       </section>
       <section className="featured-products m-4">

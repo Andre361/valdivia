@@ -1,15 +1,24 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
+import { parseCookies, destroyCookie } from "nookies";
+const cookies = parseCookies();
+const token = cookies.access ? cookies.access : "";
 const useAuthStore = create(
   devtools((set) => ({
-    user: {},
-    // authenticated: false,
+    userData: {},
+    token,
+    userIsAuthenticated: token != "",
 
-    setUser: (data) => set({ user: data }),
-    removeUser: () => set({}, true),
-    // authenticationToggle: (state) => !state.authenticate,
-    // userIsAuthenticated: (state) => state.authenticated === true,
+    setUserData: (data) => set({ userData: data }),
+
+    login: (access) => {
+      set(() => ({ token: access, userIsAuthenticated: true }));
+    },
+
+    logout: () => {
+      set(() => ({ userData: {}, token: "", userIsAuthenticated: false })),
+        destroyCookie(null, "access");
+    },
   }))
 );
-
 export default useAuthStore;

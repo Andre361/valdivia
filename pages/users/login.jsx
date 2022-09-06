@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { setCookie } from "nookies";
 import { BASE_URL } from "constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useAuthStore from "store/user";
+import shallow from "zustand/shallow";
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
+  const [login, token] = useAuthStore(
+    (state) => [state.login, state.token],
+    shallow
+  );
   const nookieOptions = { maxAge: 24 * 60 * 60 };
   const router = useRouter();
+  useEffect(() => {
+    if (token) {
+      router.push("/");
+    }
+  }, [router, token]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
@@ -16,11 +27,14 @@ export default function Login() {
       .then(
         (res) => (
           setCookie(null, "access", res.data.access, nookieOptions),
-          setCookie(null, "refresh", res.data.refresh, nookieOptions)
+          setCookie(null, "refresh", res.data.refresh, nookieOptions),
+          login(res.data.access)
         )
       )
-      .then(() => router.push("/"))
-      .catch((err) => toast.error("Invalid login credentials"));
+
+      .catch(
+        (err) => (toast.error("Invalid login credentials"), console.log(err))
+      );
   };
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
